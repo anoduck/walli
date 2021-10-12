@@ -1,6 +1,6 @@
-#/usr/local/bin/env bash
+#!/usr/bin/env bash
 
-cp walli.py ~/bin/walli
-mkdir -p ~/.config/walli
-touch ~/.config/walli/background
-cp ./run.sh ~/.config/walli
+cp ./walli.py $HOME/bin/walli
+chmod +x $HOME/bin/walli
+mkdir -p $HOME/.config/walli/images
+cp ./run.sh ~/.config/walli/
