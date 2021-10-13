@@ -1,35 +1,80 @@
 #!/usr/bin/env python
-import os, time, sys, random, shutil
+import os
+import time
+import sys
+import random
+import shutil
+import psutil
+import argparse
+import pywal
 from subprocess import call
 
-#See if there is the right amount of arguments
-if len(sys.argv)==4:
+#####################
+## Setup Variables ##
+#####################
+CONFIG_DIR = os.path.expanduser('~/.config/walli/')
+DEFAULT_DIR = os.path.expanduser('~/.config/walli/images/')
+#  BACKGROUND_FILE = os.path.expanduser('~/.config/walli/background1')
+BACKGROUND_FILE = pywal.wallpaper.get()
+
+################################
+## Kill other walli processes ##
+################################
+PROCNAME = "walli"
+
+def kill_wall():
+    for proc in psutil.process_iter():
+        #check that the process name matches
+        if proc.name() == PROCNAME:
+            proc.kill()
+
+##############################
+## Set Wallpaper - The Beef ##
+##############################
+
+def set_wall(args):
     #Sets the wallpaper directory
-    DIR = sys.argv[1]
+    DIR = args.d
     #Sets the pictuers destination
-    DST1 = DIR + "/background1"
-    #  DST2 = "$DIR/background2"
+    DST1 = args.f
     #Sets the time to pause
-    TIME = float(sys.argv[2])
+    TIME = float(args.t)
     #Sets directory to the image directory
     os.chdir(DIR)
     #Waits till the time is set
     while True:
+        #Performs the command after time.
         time.sleep(TIME)
         #Selects a random image file
-        FILE1 = random.choice(os.listdir(DIR))
-        #  FILE2 = random.choice(os.listdir(DIR))
-        #  while FILE2 == FILE1:
-            #  FILE2 = random.choice(os.listdir(DIR))
-        #Deletes the image in the pictuers distanation
-        #os.remove(DST)
+        # FILE1 = random.choice(os.listdir(DIR))
+        image = pywal.image.get(DIR)
+        pywal.wallpaper.change(image)
         #Copies the file
-        shutil.copy2(FILE1, DST1)
-        #  shutil.copy2(FILE2, DST2)
-        #Reseats i3wm
-        call(["wal", "-c", "-i", DIR, "-a " + sys.argv[3]])
-        call(["hsetroot", "-screens", "1", "-cover", DST1])
-        #  call(["hsetroot", "-screens", "2", "-cover", DST2])
+        #  if os.path.exists(DST1):
+            #  shutil.copy2(FILE1, DST1)
+        #  else:
+            #  exit
+        #  Reseats i3wm
+        #  call(["wal", "-c", "-i", DST1, "-a " + args.o])
+        #  call(["hsetroot", "-cover", DST1])
 
-else:
-    print("Please make sure that you have 3 arguments at the end of the command")
+##########
+## Main ##
+##########
+
+def main(**kwargs):
+    ap = argparse.ArgumentParser(description='Something fantastic', epilog='Here is an epilog')
+    ap.add_argument('-d', metavar='Working Directory', action='store_const', const=str, help='The directory containing images to use for wallpapers.', default=DEFAULT_DIR)
+    ap.add_argument('-f', metavar='Current Wallpaper', type=argparse.FileType('w', encoding='UTF-8'), help='Destination to save current wallpaper', default=BACKGROUND_FILE)
+    ap.add_argument('-t', metavar='Time', type=int, help='Time between wallpaper changes', default=210)
+    ap.add_argument('-o', metavar='Opacity', type=int, help='Opacity Level', default=85)
+    args = ap.parse_args()
+    kill_wall()
+    set_wall(args)
+
+###########
+## Start ##
+###########
+
+if __name__ == '__main__':
+    main()
