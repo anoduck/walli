@@ -45,7 +45,11 @@ def set_wall(args):
         #Performs the command after time.
         time.sleep(TIME)
         #Selects a random image file
-        image = pywal.image.get(DIR)
+        image_try = pywal.image.get(DIR)
+        while image_try == pywal.wallpaper.get():
+            image_try = pywal.image.get(DIR)
+        else:
+            image = image_try
         pywal.wallpaper.change(image)
 
 ##########
