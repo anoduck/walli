@@ -14,7 +14,6 @@ from subprocess import call
 #####################
 CONFIG_DIR = os.path.expanduser('~/.config/walli/')
 DEFAULT_DIR = os.path.expanduser('~/.config/walli/images/')
-#  BACKGROUND_FILE = os.path.expanduser('~/.config/walli/background1')
 BACKGROUND_FILE = pywal.wallpaper.get()
 
 ################################
@@ -46,17 +45,8 @@ def set_wall(args):
         #Performs the command after time.
         time.sleep(TIME)
         #Selects a random image file
-        # FILE1 = random.choice(os.listdir(DIR))
         image = pywal.image.get(DIR)
         pywal.wallpaper.change(image)
-        #Copies the file
-        #  if os.path.exists(DST1):
-            #  shutil.copy2(FILE1, DST1)
-        #  else:
-            #  exit
-        #  Reseats i3wm
-        #  call(["wal", "-c", "-i", DST1, "-a " + args.o])
-        #  call(["hsetroot", "-cover", DST1])
 
 ##########
 ## Main ##
