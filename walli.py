@@ -1,13 +1,10 @@
 #!/usr/bin/env python
+
 import os
 import time
-import sys
-import random
-import shutil
-import psutil
 import argparse
+import psutil
 import pywal
-from subprocess import call
 
 #####################
 ## Setup Variables ##
@@ -45,17 +42,10 @@ def set_wall(args):
     ## Get File Size of previous
     PRWALL = os.path.getsize(PREV_IMAGE)
     #Waits till the time is set
-    if PRWALL > 60:
-        WAL_SET = True
-    else:
-        WAL_SET = False
-        #Performs the command after time.
-    if WAL_SET == False:
-        image = random.choice([
-        x for x in os.listdir(DEFAULT_DIR)
-        if os.path.isfile(os.path.join(DEFAULT_DIR, x))
-        ]) 
-        #  image = pywal.image.get(DIR)
+    WAL_SET = bool(PRWALL > 60)
+    #Performs the command after time.
+    if WAL_SET is False:
+        image = pywal.image.get(DIR)
         pywal.wallpaper.change(image)
     # Else wait for Time, check previous wallpaper
     else:
@@ -67,7 +57,7 @@ def set_wall(args):
 ## Main ##
 ##########
 
-def main(**kwargs):
+def main():
     ap = argparse.ArgumentParser(description='A Friendly Wallpaper Changer for I3 in Python', epilog='Rotates desktop wallpaper by defined time from defined directory with defined opacity.')
     ap.add_argument('-d', metavar='Working Directory', action='store_const', const=str, help='The directory containing images to use for wallpapers.', default=DEFAULT_DIR)
     ap.add_argument('-f', metavar='Current Wallpaper', type=argparse.FileType('w', encoding='UTF-8'), help='Destination to save current wallpaper', default=BACKGROUND_FILE)
