@@ -49,7 +49,13 @@ def set_wall(args):
     WAL_SET = bool(PRWALL > 60)
     # Performs the command after time.
     if WAL_SET is False:
+<<<<<<< HEAD
         image = pywal.image.get(DIR, CACHE_DIR)
+||||||| parent of f6685e9 (added walsh)
+        image = pywal.image.get(DIR)
+=======
+        image = pywal.image.get_random_image(DIR)
+>>>>>>> f6685e9 (added walsh)
         pywal.wallpaper.change(image)
     # Else wait for Time, check previous wallpaper
     else:
