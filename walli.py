@@ -13,9 +13,6 @@ from pywal.settings import CACHE_DIR
 
 CONFIG_DIR = os.path.expanduser('~/.config/walli/')
 DEFAULT_DIR = os.path.expanduser('~/.config/walli/images/')
-BACKGROUND_FILE = os.path.join(os.environ['HOME'], '.config/walli/background1')
-PREV_IMAGE = os.path.join(os.environ['HOME'], '.cache/wal/wal')
-# CACHE_DIR = os.path.join(os.environ['HOME'], '.cache/wal')
 
 ################################
 ## Kill other walli processes ##
@@ -35,33 +32,12 @@ def kill_wall():
 ##############################
 
 def set_wall(args):
-    # Sets the wallpaper directory
-    DIR = args.d
-    # Sets the pictuers destination
-    DST1 = args.f
-    # Sets the time to pause
-    TIME = float(args.t)
     # Sets directory to the image directory
-    os.chdir(DIR)
-    ## Get File Size of previous
-    PRWALL = os.path.getsize(PREV_IMAGE)
-    # Waits till the time is set
-    WAL_SET = bool(PRWALL > 60)
-    # Performs the command after time.
-    if WAL_SET is False:
-<<<<<<< HEAD
-        image = pywal.image.get(DIR, CACHE_DIR)
-||||||| parent of f6685e9 (added walsh)
-        image = pywal.image.get(DIR)
-=======
-        image = pywal.image.get_random_image(DIR)
->>>>>>> f6685e9 (added walsh)
-        pywal.wallpaper.change(image)
-    # Else wait for Time, check previous wallpaper
-    else:
-        time.sleep(TIME)
-        image = pywal.image.get(DIR, DST1)
-        pywal.wallpaper.change(image)
+    os.chdir(args.d)
+    # Define image
+    image = pywal.image.get(args.d)
+    time.sleep(args.t)
+    pywal.wallpaper.change(image)
 
 
 ##########
@@ -73,10 +49,7 @@ def main():
                                  epilog='Rotates desktop wallpaper by defined time from defined directory with defined opacity.')
     ap.add_argument('-d', metavar='Working Directory', action='store_const', const=str,
                     help='The directory containing images to use for wallpapers.', default=DEFAULT_DIR)
-    ap.add_argument('-f', metavar='Current Wallpaper', type=argparse.FileType('w', encoding='UTF-8'),
-                    help='Destination to save current wallpaper', default=BACKGROUND_FILE)
     ap.add_argument('-t', metavar='Time', type=int, help='Time between wallpaper changes', default=150)
-    ap.add_argument('-o', metavar='Opacity', type=int, help='Opacity Level', default=85)
     args = ap.parse_args()
     kill_wall()
     set_wall(args)
