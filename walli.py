@@ -35,9 +35,10 @@ def set_wall(args):
     # Sets directory to the image directory
     os.chdir(args.d)
     # Define image
-    image = pywal.image.get_random_image(args.d)
-    time.sleep(args.t)
-    pywal.wallpaper.change(image)
+    while True:
+        time.sleep(args.t)
+        image = pywal.image.get_random_image(args.d, recursive=True)
+        pywal.wallpaper.change(image)
 
 
 ##########
